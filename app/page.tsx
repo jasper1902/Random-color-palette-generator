@@ -5,27 +5,27 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 export default function Home() {
-  const [colors, setColors] = useState<string[]>([]);
+  const [paletteColors, setPaletteColors] = useState<string[]>([]);
 
-  function getRandomColor() {
-    let r = Math.floor(Math.random() * 256);
-    let g = Math.floor(Math.random() * 256);
-    let b = Math.floor(Math.random() * 256);
+  function getRandomColorHex() {
+    let red = Math.floor(Math.random() * 256);
+    let green = Math.floor(Math.random() * 256);
+    let blue = Math.floor(Math.random() * 256);
 
-    let hexR = r.toString(16).padStart(2, "0");
-    let hexG = g.toString(16).padStart(2, "0");
-    let hexB = b.toString(16).padStart(2, "0");
+    let hexRed = red.toString(16).padStart(2, "0");
+    let hexGreen = green.toString(16).padStart(2, "0");
+    let hexBlue = blue.toString(16).padStart(2, "0");
 
-    let hexColor = "#" + hexR + hexG + hexB;
+    let hexColor = "#" + hexRed + hexGreen + hexBlue;
 
     return hexColor;
   }
 
   useEffect(() => {
-    random();
+    generateRandomPalette();
     const handleKeyDown = (event: { code: string }) => {
       if (event.code === "Space") {
-        random();
+        generateRandomPalette();
       }
     };
     window.addEventListener("keydown", handleKeyDown);
@@ -34,15 +34,15 @@ export default function Home() {
     };
   }, []);
 
-  function random() {
+  function generateRandomPalette() {
     let colorsArray = [];
     for (let i = 0; i < 6; i++) {
-      colorsArray.push(getRandomColor());
+      colorsArray.push(getRandomColorHex());
     }
-    setColors(colorsArray);
+    setPaletteColors(colorsArray);
   }
 
-  function copyToClipboard(color: string) {
+  function copyColorToClipboard(color: string) {
     navigator.clipboard.writeText(color);
     toast.success(`Color ${color.toUpperCase()} copied to your clipboard`, {
       position: "bottom-right",
@@ -63,8 +63,8 @@ export default function Home() {
           Color palette generator
         </h1>
         <div className="flex gap-4 items-center justify-center flex-wrap">
-          {colors.map((color) => (
-            <div key={color} onClick={() => copyToClipboard(color)}>
+          {paletteColors.map((color) => (
+            <div key={color} onClick={() => copyColorToClipboard(color)}>
               <Card className="p-4 bg-slate-200 cursor-pointer transform transition duration-300 hover:scale-105">
                 <CardHeader
                   className="flex-col items-start py-40 px-24 "
@@ -81,7 +81,7 @@ export default function Home() {
         </div>
         <div className="flex flex-col gap-4 mx-auto">
           <Button
-            onClick={random}
+            onClick={generateRandomPalette}
             className="bg-indigo-500 text-slate-300 font-bold text-xl"
             size="lg"
           >
